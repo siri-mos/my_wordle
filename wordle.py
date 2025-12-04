@@ -90,7 +90,7 @@ def playWordle():
   attemptCount = MAX_ATTEMPTS
   #get the puzzle key for the game
   key = getPuzzleKey()
-  key = 'hello'
+  
   guess = getValidInputFromUser()
   while(guess != key ):
     colorCode = compare(guess, key)
