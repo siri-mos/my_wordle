@@ -15,8 +15,10 @@ errCode = Enum('errCode', [('LEN_MORE_THAN_PUZZLE_LEN', 1),('LEN_LESS_THAN_PUZZL
 def getPuzzleKey():
   randWord = RandomWord()
   # generate a random word
-  puzzleKey = randWord.word(word_min_length=PUZZLE_WORD_LEN, word_max_length=PUZZLE_WORD_LEN)
-  return puzzleKey
+  while(True):
+    puzzleKey = randWord.word(word_min_length=PUZZLE_WORD_LEN, word_max_length=PUZZLE_WORD_LEN).lower()
+    if(puzzleKey in words.words()):
+      return puzzleKey
 
 def getLettersCountInWord(word):
   lettersCount = {}
@@ -97,7 +99,7 @@ def playWordle():
   while(guess != key ):
     colorCode = compare(guess, key)
     print(colorFormatOutput( colorCode, guess))
-    if (attemptCount -1):
+    if (attemptCount > 1):
       attemptCount = attemptCount - 1
       print("You have", attemptCount , "attempt(s) left")
       guess = getValidInputFromUser()
