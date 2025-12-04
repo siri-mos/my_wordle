@@ -1,3 +1,4 @@
+
 #pip install --upgrade wonderwords
 
 from wonderwords import RandomWord
@@ -69,9 +70,9 @@ def getValidInputFromUser():
   userInput = validateInput(userInput)
   while(userInput in [errCode.LEN_MORE_THAN_PUZZLE_LEN, errCode.LEN_LESS_THAN_PUZZLE_LEN, errCode.NOT_FOUND_IN_DICT]):
     if(userInput == errCode.LEN_MORE_THAN_PUZZLE_LEN):
-      print("The word is longer than the allowed: ", PUZZLE_WORD_LEN , "please enter a valid word")
+      print("The word is longer than the allowed, retry")
     elif(userInput == errCode.LEN_LESS_THAN_PUZZLE_LEN):
-      print("The word is too short, retry!")
+      print("The word is shorter the required, retry!")
     elif(userInput == errCode.NOT_FOUND_IN_DICT):
       print("The word is not in the dictionary, retry!")
     else:
