@@ -11,6 +11,7 @@ from enum import Enum
 PUZZLE_WORD_LEN = 5
 MAX_ATTEMPTS = 6
 errCode = Enum('errCode', [('LEN_MORE_THAN_PUZZLE_LEN', 1),('LEN_LESS_THAN_PUZZLE_LEN', 2), ('NOT_FOUND_IN_DICT', 3)])
+colorCode = Enum('colorCode', [('YELLOW', '\033[33m'),('GREEN', '\033[32m'), ('RED', '\033[31m'), ('RESET', '\033[0m')])
 
 def getPuzzleKey():
   randWord = RandomWord()
@@ -33,25 +34,25 @@ def compare(userGuess, key):
   keyLetterCount = getLettersCountInWord(key)
   for i in range(PUZZLE_WORD_LEN):
     if(userGuess[i] == key[i] ):
-      code[i] = '\033[32m' #Green
+      code[i] = colorCode.GREEN.value
       keyLetterCount[userGuess[i]] = keyLetterCount[userGuess[i]] - 1
       userMatchDone[i] = 1
   for i in range(PUZZLE_WORD_LEN):
     if (userMatchDone[i] != 1):   
       if(userGuess[i] in key):
           if(keyLetterCount[userGuess[i]] > 0):
-            code[i] = '\033[33m' #Yellow
+            code[i] = colorCode.YELLOW.value
             keyLetterCount[userGuess[i]] = keyLetterCount[userGuess[i]] - 1
           else:
-            code[i] = '\033[31m' #Black
+            code[i] = colorCode.RED.value
       else:
-        code[i] = '\033[31m' #Black
+        code[i] = colorCode.RED.value
   return code
 
 def colorFormatOutput(code, userGuess):
   out = ''
   for i in range(len(code)):
-    out = out + code[i] + userGuess[i] + '\033[0m'
+    out = out + code[i] + userGuess[i] + colorCode.RESET.value
   return out
 
 def validateInput(userInput):
@@ -97,8 +98,8 @@ def playWordle():
   key = getPuzzleKey()
   guess = getValidInputFromUser()
   while(guess != key ):
-    colorCode = compare(guess, key)
-    print(colorFormatOutput( colorCode, guess))
+    output = compare(guess, key)
+    print(colorFormatOutput( output , guess))
     if (attemptCount > 1):
       attemptCount = attemptCount - 1
       print("You have", attemptCount , "attempt(s) left")
@@ -107,7 +108,7 @@ def playWordle():
       print("Sorry, you ran out of your 6 attempts! Word was: ", key)
       break
   if (guess == key):
-    print("Congratulations, you solved the puzzle!!\033[32m", key, '\033[0m')
+    print("Congratulations, you solved the puzzle!!", colorCode.GREEN.value, key, colorCode.RESET.value)
 
 #start the game!
 playWordle()
