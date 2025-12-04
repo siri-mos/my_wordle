@@ -1,4 +1,3 @@
-
 #pip install --upgrade wonderwords
 
 from wonderwords import RandomWord
@@ -26,21 +25,25 @@ def getLettersCountInWord(word):
   return lettersCount
 
 def compare(userGuess, key):
-  code = {}
+  code = {k:'\033[31m' for k in range(PUZZLE_WORD_LEN)}
+  userMatchDone = {k: 0 for k in range(PUZZLE_WORD_LEN)}
   #get the letter count in the puzzle key to track repeated letters
   keyLetterCount = getLettersCountInWord(key)
   for i in range(PUZZLE_WORD_LEN):
     if(userGuess[i] == key[i] and keyLetterCount[userGuess[i]] > 0):
       code[i] = '\033[32m' #Green
       keyLetterCount[userGuess[i]] = keyLetterCount[userGuess[i]] - 1
-    elif(userGuess[i] in key):
-      if(keyLetterCount[userGuess[i]] > 0):
-        code[i] = '\033[33m' #Yellow
-        keyLetterCount[userGuess[i]] = keyLetterCount[userGuess[i]] - 1
+      userMatchDone[i] = 1
+  for i in range(PUZZLE_WORD_LEN):
+    if (userMatchDone[i] != 1):   
+      if(userGuess[i] in key):
+          if(keyLetterCount[userGuess[i]] > 0):
+            code[i] = '\033[33m' #Yellow
+            keyLetterCount[userGuess[i]] = keyLetterCount[userGuess[i]] - 1
+          else:
+            code[i] = '\033[31m' #Black
       else:
         code[i] = '\033[31m' #Black
-    else:
-      code[i] = '\033[31m' #Black
   return code
 
 def colorFormatOutput(code, userGuess):
@@ -90,7 +93,6 @@ def playWordle():
   attemptCount = MAX_ATTEMPTS
   #get the puzzle key for the game
   key = getPuzzleKey()
-  
   guess = getValidInputFromUser()
   while(guess != key ):
     colorCode = compare(guess, key)
