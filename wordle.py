@@ -28,7 +28,6 @@ def compare(userGuess, key):
   code = {}
   #get the letter count in the puzzle key to track repeated letters
   keyLetterCount = getLettersCountInWord(key)
-  print(keyLetterCount)  
   for i in range(PUZZLE_WORD_LEN):
     if(userGuess[i] == key[i] and keyLetterCount[userGuess[i]] > 0):
       code[i] = '\033[32m' #Green
