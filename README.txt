@@ -1,14 +1,7 @@
-Here is a rewritten **README.txt** that clearly explains the new behavior:
-**wonderwords is now installed automatically at runtime if missing**.
-
----
-
 # **Wordle Python Game**
 
 A simple terminal-based implementation of the popular **Wordle** game in Python.
 Guess the five-letter word in **6 attempts** while receiving **color-coded feedback**.
-
----
 
 ## **Features**
 
@@ -22,8 +15,6 @@ Guess the five-letter word in **6 attempts** while receiving **color-coded feedb
   * **Red** – letter is not in the word
 * Fully handles **repeated letters** in both the puzzle and the user’s guesses.
 * Validates guesses using the **NLTK English words corpus**.
-
----
 
 ## **How to Play**
 
