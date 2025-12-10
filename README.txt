@@ -1,108 +1,88 @@
-Wordle Python Game
+Here is a rewritten **README.txt** that clearly explains the new behavior:
+**wonderwords is now installed automatically at runtime if missing**.
 
-A simple terminal-based implementation of the popular Wordle game in Python.
-Guess the five-letter word in 6 attempts while receiving color-coded feedback.
+---
 
-Features
+# **Wordle Python Game**
 
-Randomly selects a 5-letter English word as the puzzle key.
+A simple terminal-based implementation of the popular **Wordle** game in Python.
+Guess the five-letter word in **6 attempts** while receiving **color-coded feedback**.
 
-Provides 6 attempts to guess the word correctly.
+---
 
-Feedback uses colors to indicate:
+## **Features**
 
-Green  – Letter is in the correct position.
+* Automatically installs the **wonderwords** package if it is not already installed.
+* Randomly selects a **5-letter English word** as the puzzle key.
+* Provides **6 attempts** to guess the correct word.
+* Color-coded feedback:
 
-Yellow – Letter exists in the word but in a different position.
+  * **Green** – correct letter in the correct position
+  * **Yellow** – letter exists in the word but in a different position
+  * **Red** – letter is not in the word
+* Fully handles **repeated letters** in both the puzzle and the user’s guesses.
+* Validates guesses using the **NLTK English words corpus**.
 
-Red – Letter is not in the word.
+---
 
-Handles repeated letters in both the puzzle and guesses accurately.
-
-Validates guesses against the English dictionary (via NLTK corpus).
-
-Installation
-
-Clone this repository or copy the code into a Python file (e.g., wordle.py).
-
-Install required Python packages:
-
-pip install --upgrade wonderwords nltk
-
-
-Download NLTK words corpus (one-time setup):
-
-import nltk
-nltk.download('words')
-
-How to Play
+## **How to Play**
 
 Run the script:
 
+```
 python wordle.py
+```
 
+When the game starts:
 
-The game will prompt:
+* If the **wonderwords** package is not installed, the script will automatically install it using `pip`.
+* You will then be prompted:
 
-Enter a five-letter word:
+  ```
+  Enter a five-letter word:
+  ```
 
+Enter any valid 5-letter English word and receive color-coded feedback:
 
-Enter your guess. Feedback will be shown using colors:
-
-Green: Correct letter and position.
-
-Yellow: Letter exists but wrong position.
-
-Red/Black: Letter not in the word.
+* **Green** → correct letter, correct position
+* **Yellow** → correct letter, wrong position
+* **Red** → letter not in the word
 
 Continue guessing until:
 
-You guess the word correctly (win), or
+* You guess the word correctly (win), or
+* You use all 6 attempts (lose)
 
-You run out of 6 attempts (lose).
 
-Example:
+## **Code Structure**
 
-Welcome to Wordle !!
-Start guessing the five-letter word, you have 6 attempts!!!
-Color Red: Letter is not in the word
-Color Yellow: Letter is at a different position in the word
-Color Green: Letter is at the same position in the word
+* **checkDepPackage()** – Checks if wonderwords is installed
+* **installDepPackage()** – Installs wonderwords automatically if missing
+* **getPuzzleKey()** – Ensures dependency availability and generates a random puzzle word
+* **getLettersCountInWord()** – Counts letters to handle duplicates
+* **compare()** – Compares guess to answer and assigns color feedback
+* **colorFormatOutput()** – Colors output for display
+* **validateInput()** – Validates word length and dictionary presence
+* **getValidInputFromUser()** – Prompts repeatedly until a valid word is entered
+* **playWordle()** – Main game loop
 
-Code Structure
 
-getPuzzleKey() – Generates a random 5-letter word.
+## **Dependencies**
 
-getLettersCountInWord(word) – Returns a dictionary with the count of each letter in a word.
+* **Python 3.x**
+* **nltk** – for dictionary validation
+* **wonderwords** – for random word generation
 
-compare(userGuess, key) – Compares user guess to the puzzle word and returns color codes for feedback.
+  * *Automatically installed at runtime if missing*
 
-colorFormatOutput(code, userGuess) – Formats colored output for terminal.
 
-validateInput(userInput) – Checks if input is valid (length & dictionary).
+## **Notes**
 
-getValidInputFromUser() – Prompts the user until a valid word is entered.
+* The game uses ANSI escape sequences for color support.
+  Compatible with Linux, macOS, and modern Windows terminals.
+* Repeated letters are handled correctly:
 
-playWordle() – Main game loop.
+  * Exact matches (green) are processed first
+  * Yellows appear only when unused instances remain
+  * Extra occurrences are marked red
 
-Dependencies
-
-Python 3.x
-
-wonderwords
- – for random word generation
-
-nltk
- – for dictionary validation
-
-Notes
-
-The game uses ANSI escape codes for terminal colors, which work on most terminals (Linux, macOS, Windows 10+).
-
-Repeated letters are handled correctly:
-
-Greens are prioritized.
-
-Remaining letters are yellow only if unused instances exist.
-
-Extra letters beyond puzzle counts are marked black.

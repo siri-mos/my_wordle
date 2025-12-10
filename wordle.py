@@ -1,19 +1,38 @@
-#pip install --upgrade wonderwords
-
+import subprocess
+import sys
 from wonderwords import RandomWord
 import builtins # Import builtins to access the original input function
 import nltk
-nltk.download('words')
+nltk.download('words', quiet=True)
 from nltk.corpus import words
 from enum import Enum
 
 #one time definitions
 PUZZLE_WORD_LEN = 5
 MAX_ATTEMPTS = 6
-errCode = Enum('errCode', [('LEN_MORE_THAN_PUZZLE_LEN', 1),('LEN_LESS_THAN_PUZZLE_LEN', 2), ('NOT_FOUND_IN_DICT', 3)])
+errCode = Enum('errCode', [('LEN_MORE_THAN_PUZZLE_LEN', 1),('LEN_LESS_THAN_PUZZLE_LEN', 2),('NOT_FOUND_IN_DICT', 3),('DEP_INSTALL_FAILED', 4)])
 colorCode = Enum('colorCode', [('YELLOW', '\033[33m'),('GREEN', '\033[32m'), ('RED', '\033[31m'), ('RESET', '\033[0m')])
+    
+def checkDepPackage():
+  try:
+    import wonderwords
+  except ImportError:
+    return False
+  return True
+
+def installDepPackage(package):
+    try:
+      subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package])
+      print("installing")
+    except subprocess.CalledProcessError as e:
+      print("Failed to install ", package, "!! Error returned: ", e)
+      return errCode.DEP_INSTALL_FAILED
 
 def getPuzzleKey():
+  #check and install 'wonderwords' - a package we need to generate the puzzle key
+  if (checkDepPackage() == False):
+    if (installDepPackage("wonderwords") == errCode.DEP_INSTALL_FAILED):
+      return errCode.DEP_INSTALL_FAILED
   randWord = RandomWord()
   # generate a random word
   while(True):
@@ -68,15 +87,13 @@ def validateInput(userInput):
         return errCode.NOT_FOUND_IN_DICT
     except:
       return errCode.NOT_FOUND_IN_DICT
-    else:
-      return userInput.lower()
 
 def getValidInputFromUser():
   userInput = builtins.input(" Enter a five letter word:")
   userInput = validateInput(userInput)
   while(userInput in [errCode.LEN_MORE_THAN_PUZZLE_LEN, errCode.LEN_LESS_THAN_PUZZLE_LEN, errCode.NOT_FOUND_IN_DICT]):
     if(userInput == errCode.LEN_MORE_THAN_PUZZLE_LEN):
-      print("The word is longer than the allowed, retry")
+      print("The word is longer than the allowed, retry!")
     elif(userInput == errCode.LEN_LESS_THAN_PUZZLE_LEN):
       print("The word is shorter the required, retry!")
     elif(userInput == errCode.NOT_FOUND_IN_DICT):
@@ -88,14 +105,16 @@ def getValidInputFromUser():
   return userInput
 
 def playWordle():
-  
+  attemptCount = MAX_ATTEMPTS
+  #get the puzzle key for the game
+  key = getPuzzleKey()
+  if (key == errCode.DEP_INSTALL_FAILED):
+    print("Unable to install the depedant pakcage, Exiting!!")
+    return
   print("Welcome to Wordle !!\nStart guessing the five letter word, you have 6 attempts!!!")
   print("Color Red: Letter is not in the word")
   print("Color Yellow: Letter is at a different position in the word")
   print("Color Green: Letter is at the same position in the word")
-  attemptCount = MAX_ATTEMPTS
-  #get the puzzle key for the game
-  key = getPuzzleKey()
   guess = getValidInputFromUser()
   while(guess != key ):
     output = compare(guess, key)
@@ -109,6 +128,7 @@ def playWordle():
       break
   if (guess == key):
     print("Congratulations, you solved the puzzle!!", colorCode.GREEN.value, key, colorCode.RESET.value)
+
 
 #start the game!
 playWordle()
