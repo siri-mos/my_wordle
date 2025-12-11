@@ -27,11 +27,7 @@ python wordle.py
 When the game starts:
 
 * If the **wonderwords** package is not installed, the script will automatically install it using `pip`.
-* You will then be prompted:
 
-  ```
-  Enter a five-letter word:
-  ```
 
 Enter any valid 5-letter English word and receive color-coded feedback:
 

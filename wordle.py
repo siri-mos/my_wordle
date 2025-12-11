@@ -1,6 +1,5 @@
 import subprocess
 import sys
-from wonderwords import RandomWord
 import builtins # Import builtins to access the original input function
 import nltk
 nltk.download('words', quiet=True)
@@ -23,7 +22,6 @@ def checkDepPackage():
 def installDepPackage(package):
     try:
       subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", package])
-      print("installing")
     except subprocess.CalledProcessError as e:
       print("Failed to install ", package, "!! Error returned: ", e)
       return errCode.DEP_INSTALL_FAILED
@@ -33,6 +31,7 @@ def getPuzzleKey():
   if (checkDepPackage() == False):
     if (installDepPackage("wonderwords") == errCode.DEP_INSTALL_FAILED):
       return errCode.DEP_INSTALL_FAILED
+  from wonderwords import RandomWord
   randWord = RandomWord()
   # generate a random word
   while(True):
@@ -128,7 +127,6 @@ def playWordle():
       break
   if (guess == key):
     print("Congratulations, you solved the puzzle!!", colorCode.GREEN.value, key, colorCode.RESET.value)
-
 
 #start the game!
 playWordle()
