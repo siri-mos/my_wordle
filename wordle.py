@@ -10,7 +10,7 @@ errCode = Enum('errCode', [('LEN_MORE_THAN_PUZZLE_LEN', 1),('LEN_LESS_THAN_PUZZL
 colorCode = Enum('colorCode', [('YELLOW', '\033[33m'),('GREEN', '\033[32m'), ('RED', '\033[31m'), ('RESET', '\033[0m')])
 
 def checkNImportDependencies():
-  #check and install 'wonderwords' - a package we need to generate the puzzle key
+  #check and install 'wonderwords', 'nltk' - packages we need to generate the puzzle key & validate words
   if (checkwonderwordsPackage() == False):
     if (installDepPackage("wonderwords") == errCode.DEP_INSTALL_FAILED):
       return (errCode.DEP_INSTALL_FAILED, 0, 0)
@@ -19,6 +19,7 @@ def checkNImportDependencies():
   if (checknltkPackage() == False):
     if (installDepPackage("nltk") == errCode.DEP_INSTALL_FAILED):
       return (errCode.DEP_INSTALL_FAILED, 0, 0)
+  import nltk
   nltk.download('words', quiet=True)
   from nltk.corpus import words
   return (True, randWord, words)
@@ -30,7 +31,7 @@ def checkwonderwordsPackage():
   except ImportError:
     return False
   return True
-  
+
 def checknltkPackage():
   try:
     import nltk
@@ -44,9 +45,11 @@ def installDepPackage(package):
     except subprocess.CalledProcessError as e:
       print("Failed to install ", package, "!! Error returned: ", e)
       return errCode.DEP_INSTALL_FAILED
+    except:
+      return errCode.DEP_INSTALL_FAILED
 
-def getPuzzleKey(randWord, words):  
-  
+def getPuzzleKey(randWord, words):
+
   # generate a random word
   while(True):
     puzzleKey = randWord.word(word_min_length=PUZZLE_WORD_LEN, word_max_length=PUZZLE_WORD_LEN).lower()
@@ -122,9 +125,9 @@ def playWordle():
   #check for the dependent packages and install if not found
   (status, randWord, words) = checkNImportDependencies()
   if ( status == errCode.DEP_INSTALL_FAILED):
-    print("Unable to install the depedant package, Exiting!!")
+    print("Unable to install the dependant package, Exiting!!")
     return
-    
+
   #get the puzzle key for the game
   key = getPuzzleKey(randWord, words)
   print("Welcome to Wordle !!\nStart guessing the five letter word, you have 6 attempts!!!")
@@ -141,9 +144,11 @@ def playWordle():
       guess = getValidInputFromUser(words)
     else:
       print("Sorry, you ran out of your 6 attempts! Word was: ", key)
+      input("Press enter to exit!!")
       break
   if (guess == key):
     print("Congratulations, you solved the puzzle!!", colorCode.GREEN.value, key, colorCode.RESET.value)
+    input("Press enter to exit!!")
 
 #start the game!
 playWordle()
